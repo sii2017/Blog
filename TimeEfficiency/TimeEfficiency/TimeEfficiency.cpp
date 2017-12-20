@@ -20,12 +20,11 @@ WNDPROC OldProc[NUM];	//保存窗口消息处理程序地址
 //	char* endTime;
 //};
 //std::vector<char*, char*> vTimeRecord;
-
+TCHAR szAppName[]= TEXT("TimeEffciency");
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ChildProc(HWND, UINT, WPARAM, LPARAM);
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
 {
-	TCHAR szAppName[]= TEXT("TimeEffciency");
 	HWND hwnd;
 	MSG msg;
 	WNDCLASS wndclass;
@@ -59,6 +58,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 		DispatchMessage(&msg);
 	}
 	return msg.wParam;
+}
+
+int AskConfirmation(HWND hwnd)
+{
+	return MessageBox(hwnd, TEXT("Really want to close?"), szAppName, 
+		MB_YESNO | MB_ICONQUESTION);  
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -152,6 +157,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 
 		EndPaint(hwnd, &ps);
+		return 0;
+	case WM_CLOSE:
+		if(IDYES== AskConfirmation(hwnd))
+			DestroyWindow(hwnd);
 		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);
