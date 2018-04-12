@@ -202,7 +202,7 @@ Stack<int,1024> intStack;
 ```    
 
 ## 模板专门化  
-当我们要定义**同一个模板的不同实现**，我们可以使用模板的专门化。    
+当我们要定义**同一个模板的特定（specific）实现**，即当常规的类模板无法满足某一种情况时，为了处理这种特定的情况，又不用重新写一个新的模板，我们可以使用模板的专门化。    
 ### 函数模板专门化
 假设我们swap函数要处理一个情况，我们有两个很多元素的vector<int>,在使用原来的swap函数，执行tmpT = t1要拷贝t1的全部元素，占用大量内存，将会造成性能下降。于是我们系统通过别的方法，即vector类本身的swap函数解决这个问题,而不适用我们模板中的方法。代码如下:     
 ```c
@@ -264,7 +264,7 @@ template<class V> void swap(std::vector<V>& t1, std::vector<V>& t2)
 }    
 ```    
 我们将原来空的括号，设定了class V这个参数，并且后面使用V类型来应对不同的数据类型。   
-### 类模板专门化
+### 类模板专门化    
 先看以下的compare代码：   
 ```c   
 //compare.h    
@@ -321,3 +321,99 @@ public:
 模板专门化的template后的括号并非只能为空，如果有需要也可以加入参数。   
 模板专门化的概念与函数重载类似，只是函数重载针对的是“参数的数量”，而模板专门化针对的是“参数的类型”。   
 ## 模板类型转换   
+先看如下代码：    
+```c
+//shape.h    
+class Shape{};    
+class Circle: public Shape{};       
+    
+//main.cpp    
+#include <stdio.h>    
+#include "stack.h"   
+#include "shape.h"     
+int main()    
+{    
+    Stack<Circle*> pcircleStack;    
+    Stack<Shape*> pshapeStack;     
+    pcircleStack.push(new Circle);   
+    pshapeStack = pcircleStack; 	//wrong    
+    return 0;   
+}   
+```   
+这种情况下是无法编译的，因为尽管Shape是circle的父类，子类可以赋值给父类，但是他们作为类指针数组就不再是继承关系了。   
+然而有时候我们却希望代码可以这么工作，因此我们可以定义转换运算符，代码如下：   
+```c
+//stack.h   
+template <class T> class Stack     
+{      
+public:    
+	Stack();   
+	~Stack();   
+	void push(T t);    
+	T pop();   
+	bool isEmpty();     
+	template<class T2> operator Stack<T2>();   
+private:    
+	T* m_pT;   
+	int m_maxSize;   
+	int m_size;    
+};    
+
+#include "stack.cpp"     
+
+//stack.cpp    
+template <class  T>  Stack<T>::Stack()   
+{     
+   m_maxSize = 100;         
+   m_size = 0;   
+   m_pT = new T[m_maxSize];    
+}    
+template <class T>  Stack<T>::~Stack()     
+{   
+   delete [] m_pT ;    
+}    
+        
+template <class T> void Stack<T>::push(T t)    
+{   
+    m_size++;   
+    m_pT[m_size - 1] = t;   
+}     
+
+template <class T> T Stack<T>::pop()    
+{   
+    T t = m_pT[m_size - 1];    
+    m_size--;   
+    return t;   
+}    
+
+template <class T> bool Stack<T>::isEmpty()      
+{   
+    return m_size == 0;   
+}    
+
+//这里是新加的内容    
+template <class T> template <class T2>  Stack<T>::operator Stack<T2>()     
+{   
+    Stack<T2> StackT2;    
+    for (int i = 0; i < m_size; i++)    
+	{    
+        StackT2.push((T2)m_pT[m_size - 1]);    
+    }   
+    return StackT2;   
+}   
+
+//main.cpp
+#include <stdio.h>   
+#include "stack.h"     
+#include "shape.h"    
+int main()      
+{    
+    Stack<Circle*> pcircleStack;   
+    Stack<Shape*> pshapeStack;    
+    pcircleStack.push(new Circle);    
+    pshapeStack = pcircleStack;    
+    return 0;    
+}    
+```   
+这样，Stack<Circle>或者Stack<Circle*>就可以自动转换为Stack<Shape>或者Stack<Shape*>   
+存疑
