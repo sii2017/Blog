@@ -392,7 +392,7 @@ template <class T> bool Stack<T>::isEmpty()
 }    
 
 //这里是新加的内容：类型转换函数搭配模板中的模板   
-//每当类的实例以Stack形式被赋值，则都会调用一次该函数。   
+//每当类的实例以Stack形式（仅针对该类型）被赋值，则都会调用一次该函数。   
 template <class T> template <class T2>  Stack<T>::operator Stack<T2>()     
 {   
     Stack<T2> StackT2;    
@@ -419,3 +419,30 @@ int main()
 ```   
 这样，Stack<Circle>或者Stack<Circle指针>就可以自动转换为Stack<Shape>或者Stack<Shape指针>   
 这是在模板类中使用了第二种模板（针对vector）并结合operator类型转换功能对子类和基类进行了类型转换。     
+由于语句较为复杂，做一个小分析。   
+```c
+template <class T>（以上为外层类模板的函数固定句式）   
+template <class T2>（以上为声明内层模板的语句，并非函数句式）    
+Stack<T>::operator（operator即是关键词也是函数名称）        
+Stack<T2>（这里应该是针对的需要被转换的类型）()     
+```    
+## 其它
+一个类没有模板参数，但是成员函数有模板参数是可行的，就如同给一般的函数套模板一样。代码如下:    
+```c
+class Util 			
+{    
+public:     
+	template <class T> bool equal(T t1, T t2)    
+	{    
+		return t1 == t2;    
+    }    
+};     
+
+int main() 	    
+{   
+    Util util;    
+    int a = 1, b = 2;   
+    util.equal<int>(1, 2);    
+    return 0;   
+}      
+```
