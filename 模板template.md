@@ -392,7 +392,7 @@ template <class T> bool Stack<T>::isEmpty()
 }    
 
 //这里是新加的内容：类型转换函数搭配模板中的模板   
-//每当类的实例以Stack形式（仅针对该类型）被赋值，则都会调用一次该函数。   
+//每当类的实例需要进行类型转换，则都会调用一次该函数。   
 template <class T> template <class T2>  Stack<T>::operator Stack<T2>()     
 {   
     Stack<T2> StackT2;    
@@ -412,7 +412,7 @@ int main()
     Stack<Circle*> pcircleStack;   
     Stack<Shape*> pshapeStack;    
     pcircleStack.push(new Circle);
-	//当含有类型转换函数的类发生赋值时，就会调用类型转换函数    
+	//当含有类型转换函数的类需要进行类型转换，就会调用类型转换函数    
     pshapeStack = pcircleStack;    
     return 0;    
 }    
