@@ -180,4 +180,50 @@ int main()
 	return 0;   
 }   
 ```     
+3 操作符重载中针对自增自减的情况   
+自增运算符“++”和自减运算符“--”分别包含两个版本。即运算符前置形式(如 ++x)和运算符后置形式(如 x++)，这两者进行的操作是不一样的。因此，当我们在对这两个运算符进行重载时，就必须区分前置和后置形式。C++根据参数的个数来区分前置和后置形式。     
+如果按照通常的方法来重载 ++ 运算符(即作为成员函数重载时不带参数，或者作为非成员函数重载时带有一个参数)，那么重载的是前置版本。要对后置形式进行重载，即 x++ 或 x--，就必须为重载函数再增加一个 int 类型的参数。**该参数仅仅用来告诉编译器这是一个运算符后置形式，在实际调用时不需要给出实际的参数值。**    
+```c
+#include <iostream>   
+using namespace std;  
+class A    
+{   
+public:    
+	A(int a) :num(a) {}   
+	A operator++()	//无参数则前置自增   
+	{   
+		num++;    
+		return *this;//返回的不是数字而是自己的实例   
+	}   
 
+	A operator++(int)	//一个形参int则代表后置自增   
+	{    
+		A temp = *this;   
+		num++;     
+		return temp;//后置++要返回原数据再自增，所以返回之前保存下来的copy  
+	}   
+	int Getvalue()   
+	{    
+		return num;   
+	}   
+private:  
+	int num;  
+};   
+
+int main()   
+{   
+	A a1(10);   
+	cout << a1.Getvalue() << endl;  
+	a1.operator++();//实际上也能这么调用，但是不常用      
+	cout << a1.Getvalue() << endl;   
+	a1++;//后置加加并不需要加上形参int，形参只是为了个编译器区分这是后置自增。     
+	cout << a1.Getvalue() << endl;  
+	++a1;    
+	cout << a1.Getvalue() << endl;    
+	getchar();   
+	return 0;   
+}    
+```   
+4 操作符重载中针对友元函数的情况   
+
+5 操作符重载中重载数据流的情况
