@@ -165,6 +165,7 @@ public:
 
 bool operator==(const Student& age1, const Teacher& age2)   
 {    
+	//这里由于age是两个类的公有成员，因此全局函数可以访问，而如果是私有成员，则需要在类内声明这个函数为友元函数帮助访问   
 	return age1.age == age2.age;   
 }    
    
@@ -224,6 +225,64 @@ int main()
 	return 0;   
 }    
 ```   
-4 操作符重载中针对友元函数的情况   
+4 操作符重载中重载数据流的情况   
+在重载输出输入运算符的时候，只能采用全局函数的方式（因为我们不能在ostream和istream类中编写成员函数），这里才是友元函数真正的应用场景。   
+对于输出运算符，主要负责打印对象的内容而非控制格式，输出运算符不应该打印换行符（即endl）。   
+对于输入运算符，必须处理可能失败的情况（通常处理输入失败为默认构造函数的形式），而输出运算符不需要。    
+```c
+#include <iostream>    
+using namespace std;   
+class Test   
+{   
+public:    
+	Test(int a1 = 0, int b1 = 0):a(a1), b(b1) {}    
+	//通过友元的形式使外部函数可以访问类内的所有成员     
+	friend ostream& operator<<(ostream& out, Test& obj);   
+	friend istream& operator>>(istream& in, Test& obj);   
+private:   
+	int a;   
+	int b;   
+};   
 
-5 操作符重载中重载数据流的情况
+//由于输入输出流符号是属于ostream和istream类的，并且使用这两个操作符会使用到这两个类，但是我们无法在这两个类内重载符号，所以采用全局函数的方式    
+ostream& operator<<(ostream& out, Test& obj)   
+{   
+	out << obj.a << " " << obj.b;   
+	return out;   
+}   
+istream& operator>>(istream& in, Test& obj)    
+{  
+	in >> obj.a >> obj.b;    
+	if (!in)   
+	{   
+		obj = Test();   
+	}   
+	return in;   
+}     
+
+int main()   
+{  
+	Test t1(1, 2);   
+	cout << t1 << endl;   
+	cout << "重新输入两个int值" << endl;   
+	cin >> t1;  
+	cout << t1 << endl;    
+	getchar();   
+	return 0;  
+}   
+```      
+4.1 为什么输入输出操作符不能重载在调用的类内作为成员函数。   
+首先输入输出操作符<<和>>不能在类ostream和istream中进行重载，因为这两个类继承了标准库中的流类，而这两个符号没有被声明为虚函数，所以子类ostream和istream无法对其进行覆盖。   
+其次大部分的标准库实现中，对于ostream和istream类体系采用了构造函数保护继承的方式，即使以继承的方式来扩展流类，也会在对象实例化的时候遭遇阻碍。    
+我们可以在使用的类中重载输入输出操作符，而不使用友元全局的形式。但是我们并不常这么做，因为这样做会与我们日常使用习惯不符，如下：  
+```c   
+Clsss T   
+{    
+	//重载<<和>>符号；     
+}      
+//如果重载成功的话进行输出   
+T t;   
+t<< cout;   
+//而不是cout<<t;   
+```   
+所以我们一般不这么做。   
