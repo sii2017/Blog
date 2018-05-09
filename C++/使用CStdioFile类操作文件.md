@@ -59,11 +59,12 @@ file.Close();
 ```
 ### 在Unicode编码环境下使用CStdioFile操作文件
 Unicode环境下，由于使用的是unicode而不是一般的ANSI，所以需要对各个地方（比如地址和输入的内容）进行一定的转换，才能正常使用。   
+> 关于转换的内容，可以查看本目录下《字符串之间的转换》。   
 ```c
 //将需要写入的内容转换成unicode   
 int per= 1234;   
 char temp[256];   
-sprintf(temp, "%d\0", per);   
+sprintf(temp, "%d", per);   
 USES_CONVERSION;   
 CString s = A2T(temp);  
  
