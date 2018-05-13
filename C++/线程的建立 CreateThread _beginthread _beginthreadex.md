@@ -52,4 +52,41 @@ HANDLE hStdOut = _beginthread( CheckKey, 0, NULL);
 （转自某博客）   
 > 概括：\_beginthread函数会额外申请内存空间来存储相关的数据。但是仅仅在静态链接CRT的情况下，该内存空间无法被正常释放，会引起内存泄漏。     
 > 总结，如果能使用\_beginthraed则不要使用CreateThread函数。   
+### 例子   
+```c
+//线程1每秒输出一次，线程2每3秒输出一次。线程1在5次循环后自己结束。持续30秒后，线程2随着主线程一起结束。   
+#include <iostream>    
+#include <process.h>    
+#include <windows.h>     
+  
+using namespace std;     
+  
+void ThreadFun1(PVOID param){     
+    for(int i=0; i<5; i++)   
+	{      
+        Sleep(1000);      
+        cout << "this is ThreadFun1" << endl;      
+    }      
+	_endthread();	//自己结束线程
+}      
+  
+void  ThreadFun2(PVOID param){   
+	//无限循环，但是会随着主线程的结束而结束     
+    while (1)    
+	{    
+        Sleep(3000);      
+        cout << "this is ThreadFun2" << endl;     
+    }    
+}      
+  
+int main(){    
+    int i = 0;      
+  
+    _beginthread(ThreadFun1, 0, NULL);      
+    _beginthread(ThreadFun2, 0, NULL);    
+    Sleep(30000);    
+    cout << "end" << endl;      
+    return 0;     
+}       
+```     
 ## \_beginthreadex与\_endthreadex
