@@ -67,7 +67,7 @@ void ThreadFun1(PVOID param){
         Sleep(1000);      
         cout << "this is ThreadFun1" << endl;      
     }      
-	_endthread();	//自己结束线程
+	_endthread();	//自己结束线程，并且handle会被该函数关闭
 }      
   
 void  ThreadFun2(PVOID param){   
@@ -90,3 +90,20 @@ int main(){
 }       
 ```     
 ## \_beginthreadex与\_endthreadex
+当前\_beginthreadex比\_beginthread更值得去使用。  
+### 语法
+```c
+uintptr_t _beginthreadex( // NATIVE CODE    
+   void *security,     
+   unsigned stack_size,      
+   unsigned ( __stdcall *start_address )( void * ),      
+   void *arglist,    
+   unsigned initflag,    
+   unsigned *thrdaddr       
+);    
+```   
+### 与\_beginthread的区别
+对两者进行比较，我们可以得知：  
+1 \_beginthreadex的功能性更强。   
+2 \_beginthreadex更安全
+3 
