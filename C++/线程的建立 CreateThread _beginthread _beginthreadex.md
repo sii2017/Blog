@@ -107,7 +107,7 @@ uintptr_t _beginthreadex( // NATIVE CODE
 参数stack\_size为新线程的堆栈大小或 0。   
 参数arglist是要传递到新线程的参数列表或 NULL。   
 **以下三个参数为\_beginthreadex独有：**  
-参数Security是指向 SECURITY\_ATTRIBUTES 结构的指针，此结构确定返回的句柄是否由子进程继承。 如果Security为NULL，则不能继承句柄。    
+参数Security是指向SECURITY\_ATTRIBUTES结构的指针，此结构确定返回的句柄是否由子进程继承。 如果Security为NULL，则不能继承句柄。    
 参数initflag是控制新线程的初始状态的标志。 将initflag设置为0以立即运行，或设置为CREATE\_SUSPENDED以在挂起（暂停）状态下创建线程(使用ResumeThread来启动该线程)。 将initflag设置为 STACK\_SIZE\_PARAM\_IS\_A\_RESERVATION标志以将stack\_size用作堆栈的初始保留大小（以字节计）；如果未指定此标志，stack\_size将指定提交大小。   
 参数thrdaddr是指向接收线程标识符的32位变量，用于记录线程地址。如果此变量为 NULL，则不可用。    
 ### 与\_beginthread的区别
