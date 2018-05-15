@@ -109,9 +109,11 @@ uintptr_t _beginthreadex( // NATIVE CODE
 **以下三个参数为\_beginthreadex独有：**  
 参数Security是指向 SECURITY\_ATTRIBUTES 结构的指针，此结构确定返回的句柄是否由子进程继承。 如果Security为NULL，则不能继承句柄。    
 参数initflag是控制新线程的初始状态的标志。 将initflag设置为0以立即运行，或设置为CREATE\_SUSPENDED以在挂起（暂停）状态下创建线程(使用ResumeThread来启动该线程)。 将initflag设置为 STACK\_SIZE\_PARAM\_IS\_A\_RESERVATION标志以将stack\_size用作堆栈的初始保留大小（以字节计）；如果未指定此标志，stack\_size将指定提交大小。   
-参数thrdaddr是指向接收线程标识符的32位变量。 如果此变量为 NULL，则不可用。    
+参数thrdaddr是指向接收线程标识符的32位变量，用于记录线程地址。如果此变量为 NULL，则不可用。    
 ### 与\_beginthread的区别
 对两者进行比较，我们可以得知：  
-1 \_beginthreadex的功能性更强。   
-2 \_beginthreadex更安全
-3 
+1 \_beginthreadex较\_beginthreadex拥有额外的三个参数：initflag,security和threadaddr。因此\_beginthreadex可以使我们（在安全线，状态，及识别上）更好的掌控新线程。  
+2 \_beginthreadex在失败时返回0，而\_beginthread返回-1L。   
+3 \_beginthread使用\_endthread终止，\_beginthreadex使用\_endthreadex终止。当线程的回调函数返回时，系统会自动调用\_beginthread和\_begintheadex来结束线程并且释放相关的资源。   
+4 当我们使用\_beginthead来创建新线程，而这个线程如果很快就结束了，那么返回的句柄**可能**是无效的，或者是指向其它地方的。而如果我们使用\_beginthreadex来创建线程，那么返回的句柄总是有效的。显然后者更安全。       
+> 需要注意的是，\_beginthread返回的句柄在调用\_endthread时会被系统释放。但是\_beginthreadex返回的句柄不会被系统释放，它只能被使用者手动始放。因此当我们使用\_beginthreadex来创建线程，无论我们将回调函数返回，或者是使用\_endthreadex结束线程，都需要再通过函数CloseHandle这个API函数手动的始放句柄。   
