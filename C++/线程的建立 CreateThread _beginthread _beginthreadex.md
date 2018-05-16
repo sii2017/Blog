@@ -117,3 +117,33 @@ uintptr_t _beginthreadex( // NATIVE CODE
 3 \_beginthread使用\_endthread终止，\_beginthreadex使用\_endthreadex终止。当线程的回调函数返回时，系统会自动调用\_beginthread和\_begintheadex来结束线程并且释放相关的资源。   
 4 当我们使用\_beginthead来创建新线程，而这个线程如果很快就结束了，那么返回的句柄**可能**是无效的，或者是指向其它地方的。而如果我们使用\_beginthreadex来创建线程，那么返回的句柄总是有效的。显然后者更安全。       
 > 需要注意的是，\_beginthread返回的句柄在调用\_endthread时会被系统释放。但是\_beginthreadex返回的句柄不会被系统释放，它只能被使用者手动始放。因此当我们使用\_beginthreadex来创建线程，无论我们将回调函数返回，或者是使用\_endthreadex结束线程，都需要再通过函数CloseHandle这个API函数手动的始放句柄。   
+### 例子
+```c
+#include <windows.h>  
+#include <process.h>  
+#include <iostream>   
+using namespace std;   
+
+unsigned int _stdcall Thread(PVOID param)   
+{    
+	cout << (char*)param << endl;    
+	_endthreadex(1);	//可以通过_endthreadex(返回值)来手动结束线程，也可以通过下面的return来结束。   
+	return 1;  
+}   
+
+int main()  
+{   
+	HANDLE handle[5];  
+	for (int i = 0; i < 5; i++)   
+	{   
+		char* buff = "CREATE THREAD SUCCESSFULLY!";  
+		handle[i] = (HANDLE)_beginthreadex(NULL, 0, Thread, buff, 0, NULL);	//如果不需要传参，则将buff设为0   
+		if (handle[i] == 0)	//如果失败则返回0  
+			cout << "Called Failed" << endl;   
+		CloseHandle(handle[i]);  
+	}   
+	getchar();  
+	return 0;  
+}    
+```      
+以上给出了\_beginthreadex最基础的用法。
