@@ -20,16 +20,29 @@ a= b;   //则类型转换函数被定义在A类中
 #include<iostream>    
 #include<string>    
 using namespace std;     
+
+class A
+{
+};
+
 class D    
 {     
 public:    
 	D(double d):d_(d) {}  //从这里可知D类原本是支持double类型数据的   
-	//类型转换函数，符合特征：没有返回值定义内有return语句、没有参数、须由operator做修饰、函数名为目标类或数据类型。
+	//类型转换函数，符合特征：没有返回值定义内有return语句、没有参数、须由operator做修饰、函数名为目标类或数据类型。   
+	//这里使D类型可以随时转换成int类型
 	operator int() const   
 	{    
 		std::cout<<"(int)d called!"<<std::endl;//这行并不是必要的，为被调用做标记。        
 		return static_cast<int>(d_);     
+	}  
+	//这里使D类型可以随时转换成A类型，其余同理
+	operator A() const     
+	{   
+		A temp;   
+		return temp;  
 	}     
+
 private:    
 	double d_;    
 };     
@@ -43,6 +56,7 @@ int main()
 {    
 	D d1=1.1;    
 	D d2=2.2;    
+
 	//add函数的形参为int，而D类型为double，这时候add函数会尝试让d1和d2进行类型转换，即调用类型转换函数
 	std::cout<<add(d1,d2)<<std::endl;    
 	system("pause");   
