@@ -1,7 +1,7 @@
 # 线程建立的三种方式
 程序代码的执行，是执行线程的工作。当一个进程建立起来，主线程也会产生。每一个windows程序一开始就会有一个执行线程。如果有需要我们可以调用函数来产生额外的执行线程。   
 在之前的学习过程中，一共了解了三种建立线程的方式。分别为Createthread，\_beginthread，\_beginthreadex。   
-三种函数，各有区别。**其中建议使用\_beginthreadex函数**，而其中原因将一一进行分析。
+三种函数，各有区别。**其中\_beginthreadex函数是最为建议使用的建立线程的函数**，而其中原因将一一进行分析。
 ## CreateThread
 CreateThread函数实际上是操作系统层面调用的函数，与之对应的结束线程为ExitThread。   
 ```c
@@ -114,9 +114,9 @@ uintptr_t _beginthreadex( // NATIVE CODE
 对两者进行比较，我们可以得知：  
 1 \_beginthreadex较\_beginthreadex拥有额外的三个参数：initflag,security和threadaddr。因此\_beginthreadex可以使我们（在安全线，状态，及识别上）更好的掌控新线程。  
 2 \_beginthreadex在失败时返回0，而\_beginthread返回-1L。   
-3 \_beginthread使用\_endthread终止，\_beginthreadex使用\_endthreadex终止。当线程的回调函数返回时，系统会自动调用\_beginthread和\_begintheadex来结束线程并且释放相关的资源。   
+3 \_beginthread使用\_endthread终止，\_beginthreadex使用\_endthreadex终止。当线程的回调函数返回时，系统会自动调用\_endthread和\_endthreadex来结束线程并且释放相关的资源。   
 4 当我们使用\_beginthead来创建新线程，而这个线程如果很快就结束了，那么返回的句柄**可能**是无效的，或者是指向其它地方的。而如果我们使用\_beginthreadex来创建线程，那么返回的句柄总是有效的。显然后者更安全。       
-> 需要注意的是，\_beginthread返回的句柄在调用\_endthread时会被系统释放。但是\_beginthreadex返回的句柄不会被系统释放，它只能被使用者手动始放。因此当我们使用\_beginthreadex来创建线程，无论我们将回调函数返回，或者是使用\_endthreadex结束线程，都需要再通过函数CloseHandle这个API函数手动的始放句柄。   
+> 需要注意的是，\_beginthread返回的句柄在调用\_endthread时会被系统释放。但是\_beginthreadex返回的句柄不会被系统释放，它只能被使用者手动始放。因此当我们使用\_beginthreadex来创建线程，无论我们将回调函数返回，或者是使用\_endthreadex结束线程，都需要再通过函数CloseHandle这个API函数手动释放句柄。   
 ### 例子
 ```c
 #include <windows.h>  
