@@ -89,6 +89,11 @@ vec.erase(vec.begin());		//1 2 3 4
 vec.erase(vec.begin(), vec.end() - 1);	//4    
 ```   
 在使用erase的时候需要注意，如果正在使用迭代器的话，那么删除元素后迭代器有可能会失效。   
+**删除所有元素**  
+```c
+vec.clear();   
+```  
+简单明了。  
 ### 预分配空间
 一般情况下来说，我们使用vector可以需要在需要插入数据的时候再插入，因为vector从末尾插入数据效率也比较高。但是如果我们要进一步提高vector添加数据的效率该怎么做呢？那就是预分配空间了。   
 **带初始化的调整空间**  
@@ -150,7 +155,6 @@ cout << "当前可容纳的空间为：" << vec.capacity() << endl;			//5
 以下是一些常用的功能函数：   
 vec.empty();	//如果不含任何元素则返回真；反之假。   
 vec.size();	//返回元素的个数。   
-vec.clear();	//清空vec中的元素。  
 vec.front();	//返回vec中第一个元素。   
 vec.back();		//返回vec中最后一个元素。     
 vec.capacity();  //返回vec在内存中总共可以容纳的元素个数（如果预分配了空间）   
@@ -189,6 +193,15 @@ if(itr!=vec.end())
 ```
 ### 迭代器的使用及遍历
 迭代器是一种检查容器内元素并遍历元素的数据类型。C++更趋向于使用迭代器而不是下标操作，因为标准库为每一种标准容器定义了一种迭代器类型。   
+**获取迭代器的函数**   
+```c
+vector<int> vec;  
+vector<int>::iterator itrBegin= vec.begin();  //获取第一个元素的迭代器   
+vector<int>::iterator itrEnd= vec.end();   //获取最后一个元素再后一个的迭代器   
+vector<int>::const_iterator itrCBegin= vec.cbegin();  //获取begin的const属性的迭代器   
+vector<int>::const_iterator itrCEnd= vec.cend();   //获取end的const属性的迭代器   
+```   
+**使用迭代器进行遍历**   
 ```c
 vector<int> vec;   
 for (int i = 0; i < 5; i++)  
@@ -197,6 +210,9 @@ for (int i = 0; i < 5; i++)
 vector<int>::iterator itr;   
 for (itr = vec.begin(); itr != vec.end(); itr++)  
 	cout << *itr << " ";   
-```
-### 使用场景
-当我们不知道该使用什么容器的时候，就可以选择使用vector。   
+```  
+需要注意的是，不要对vec.end()进行解引用操作，因为它已经在容器之外了，解引用将会是未定义的操作。  
+### 总结
+结构：连续的内存空间。系统会提前申请一段空间，当空间不够了再申请一段更大的，就内存而言占用不高。   
+访问：由于支持下标，随机访问很快。   
+插入删除：尾部插入删除很快速，但是在其它地方插入删除很慢。因为系统必须将整个段的数据移动内存位置，效率很低。   
