@@ -17,14 +17,14 @@ queue<int, list<int>> ql;	//使用list作为特定模板
 queue<int> qq(q);	//使用q来初始化qq     
 ```  
 相比正常的容器如vector、list，queue作为容器适配器，它的初始化方式也比较少，比较简单。   
-当没有制定容器参数的时候，默认使用deque作为特定容器。当我们使用其它容器作为特定容器的时候，该容器必须包含以下函数：   
+当没有指定容器参数的时候，默认使用deque作为特定容器。当我们使用其它容器作为特定容器的时候，该容器必须包含以下函数：   
 empty();    
 size();   
 front();	
 back();    
 push\_back();    
 pop\_front();       
-在标准容器中，deque、deque和list都满足这些要求。   
+在标准容器中，deque、vector和list都满足这些要求。   
 ### 添加元素
 ```c
 queue<double> qq;   
