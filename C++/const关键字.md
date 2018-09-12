@@ -74,7 +74,7 @@ const char* const pContent;
 如果const位于*的左侧，则const就是用来修饰指针所指向的变量，即指针指向为常量；   
 如果const位于*的右侧，const就是修饰指针本身，即指针本身是常量。    
 **3、函数中使用const**   
-(1)const修饰函数参数
+(1)const修饰函数参数    
 a.传递过来的参数在函数内不可以改变。   
 ```c
 void function(const int Var);   
