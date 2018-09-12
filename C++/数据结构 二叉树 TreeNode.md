@@ -21,11 +21,46 @@ TreeNode* pTree= new TreeNode(0);
 主要不要在操作过程中覆盖掉这个根节点。   
 ### 创建一颗完整的树  
 二叉树的元素存放是存在一定规律的。比如平衡二叉树必须左子树的值小于右子树的值，而赫尔曼二叉树最需要左大右小。  
-不过一般的树的设计规则可以由我们来定，以下提供一种创建完整树的代码。使其树形状为：  
-![](https://github.com/sii2017/image/blob/master/%E8%B6%85%E7%AE%80%E5%8D%95%E4%BA%8C%E5%8F%89%E6%A0%91.png)      
-### 插入元素  
+不过一般的树的设计规则可以由我们来定，以下提供一种创建完整树的代码。  
+```c
+#include <iostream>  
+using namespace std;  
 
-以下提供一种
+struct TreeNode   
+{  
+	char c;  
+	TreeNode* left, *right;   
+	TreeNode(char p):c(p), left(NULL), right(NULL){}   
+};  
+
+TreeNode* create(TreeNode* root)  
+{  
+	char c;   
+	cin >> c;  
+	
+	if (c == '#')   
+	{   
+		root = NULL;   
+		return root;   
+	}   
+	else   
+	{   
+		root = new TreeNode(c);   
+		root->left= create(root->left);   
+		root->right= create(root->right);   
+	}  
+	return root;   
+}   
+
+int main()   
+{  
+	TreeNode* root= NULL;  
+	root=create(root);  
+	getchar();   
+	return 0;  
+}  
+```  
+### 插入元素  
 
 ### 删除元素 
 ### 前序遍历
