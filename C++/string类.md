@@ -151,6 +151,11 @@ str.front();	//返回第一个字符
 str.back();	//返回最后一个字符   
 string substr= str.substr(2,4);	//将str从第二个字符开始的四个字符截断出来赋值给substr。   ring  
 str1.swap(str2);	//交换两个字符串的内容  
+
+int ret = str1.compare(str2);   
+//如果str1和str2相等则返回0   
+//如果str1和str2的第一个字母就不相等，str1大则返回>0，str1小则返回<0。    
+//如果str1和str2的前几个字母部分匹配，但不是全部匹配。如果str1多出字符，而str2全部匹配则返回>0，如果str2多出字符而str1全部匹配则返回<0。   
 #### 将string转化为c字符串  
 以下为两种方式，一种转换为char指针，一种转化为char数组。   
 ```c
@@ -196,4 +201,46 @@ find_last_of
 find_first_not_of    
 find_last_not_of   
 以上四个函数都与find的使用方式完全一致。   
+#### std::getline
+getline函数可以与string对象配合着使用，将输入的内容存储到string对象之中。   
+```c
+#include <iostream>  
+#include <string>   
+using namespace std;    
+
+int main()   
+{    
+	cout << "what game do you like?" << endl;   
+	string str;   
+	getline(cin, str);    
+	cout << "Oh I see, " << str << " is great!" << endl;   
+	getchar();   
+	return 0;   
+}   
+```
+### 迭代器与遍历
+迭代器与遍历方面与stl标准库模板相似。   
+```c
+int main()  
+{   
+	string str = "fate grand order";   
+	string::iterator itrBegin = str.begin();	//获取开始迭代器    
+	string::iterator itrEnd = str.end();	//获取结束迭代器     
+	string::const_iterator itrCBegin = str.cbegin();	//获取常属性的开始迭代器   
+	string::const_iterator itrCEnd = str.cend();	//获取常属性的结束迭代器   
+	string::reverse_iterator itrRBegin = str.rbegin();	//获取开始的反迭代器   
+	string::reverse_iterator itrREnd = str.rend();	//获取结束的反迭代器    
+	string::const_reverse_iterator itrCRBegin = str.crbegin();	//获取带有常属性的开始反迭代器     
+	string::const_reverse_iterator itrCREnd = str.crend();	//获取带有常属性的结束反迭代器    
+
+	for (string::iterator itr = str.begin(); itr != str.end(); itr++)   
+	{   
+		cout << *itr;  
+	}   
+	//输出 fate grand order   
+	getchar();   
+	return 0;   
+}   
+```
 ### 总结
+string的一些操作类似于标准模板库，是处理字符串比较方便的形式。它可以与char指针以及char数组进行互相转换。  
