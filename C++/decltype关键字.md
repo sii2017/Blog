@@ -37,6 +37,18 @@ decltype(a) b;	//int类型
 decltype((a)) c;	//int&类型，当然这里是错误的，引用必须初始化    
 ```   
 > 切记：decltype((variable))的结果永远是引用，而decltype(variable)结果只有当variable本身是一个引用时才是引用。   
+### 处理函数指针的方式  
+当decltype的表达式为函数，我们获得的类型是其返回值的类型，如果我们在表达式的括号后面加*，那么我们获得的类型就是该函数指针。   
+```c
+int print(char* c)  
+{   
+	cout << c << endl;   
+	return 1;  
+}   
+
+decltype(print) a;   //类型为int   
+decltype(print)* b;	//类型为函数指针 int (*b)(char*)   
+```   
 ### decltype和auto的区别
 auto和decltype都是类型推断的两种方式，但之间又有区别。主要体现在这几个方面：    
 1 auto是通过编译器计算变量的初始值来推断类型的，decltype同样也是通过编译器来分析表达式进而得到它的类型，但是它不用将表达式的值计算出来。    
