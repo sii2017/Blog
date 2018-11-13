@@ -98,6 +98,41 @@ ListNode* reverse(ListNode* list)
 }  
 ```  
 链表的倒转主要是通过将每个节点的next指针反向指向前一个指针完成的，需要注意的是当前的第一个节点将变成最后的节点，它的next需要手动指向NULL。   
+### 链表的逆向输出
+通常情况下，我们将链表倒转以后就可以逆向输出了。但是某些时候我们并不能改变链表的结构，这时候该怎么办呢？   
+方法一：通过标准库模板stack，遍历链表将链表节点依次压入stack中，然后通过stack后进先出的规则，依次输出链表就能达到逆向输出的目的。   
+```c
+void reverseprint(ListNode* head)  
+{  
+	stack<ListNode*> st;  
+	while (head)  
+	{  
+		st.push(head);  
+		head = head->next;   
+	}  
+
+	while (!st.empty())  
+	{   
+		cout << st.top()->value;  
+		st.pop();   
+	}  
+}   
+```
+方法二：通过递归，递归的思想与stack是相似的。      
+```c
+void reverseprint(ListNode* head)  
+{   
+	if (!head)  
+		return;  
+    
+	if (head->next) 
+	{   
+		reverseprint(head->next);   
+	}   
+	cout << head->value << endl;  
+}   
+```   
+方法二只是个开阔思路的方式，实际上经测试，通过stack的效率比通过递归的效率高不少。毕竟递归效率不太行。   
 ### 总结 
 链表看上去复杂，实际上是对指针的操作，通过指针指向指针来建立的连续（sequence）的容器。   
 增删查以及更多的功能基本上都可以通过从头到尾指针的顺序遍历来完成的，对此不再赘述。只是需要额外在意的是，无论增加还是减少都要通过next指针将前后连接起来，以及最后的next指针始终是NULL。       
