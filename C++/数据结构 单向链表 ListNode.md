@@ -133,6 +133,99 @@ void reverseprint(ListNode* head)
 }   
 ```   
 方法二只是个开阔思路的方式，实际上经测试，通过stack的效率比通过递归的效率高不少。毕竟递归效率不太行。   
+### 删除单个节点   
+由于单向链表不支持随机访问，因此我们通常是通过从头节点往后遍历，找到需要删除的节点，然后删除它并且把前一个节点的next指针指向后一个节点。   
+需要注意的有四种情况：  
+1 头节点与待删除节点相等，并且一共只有一个节点。这种情况下需要删除节点并且给头节点置为NULL。   
+2 头节点与待删除节点相等，并且之后还有节点。这种情况需要删除节点并且将头节点指向下一个节点。   
+3 删除的节点在末尾，那么删除后前一个节点就是尾节点了，next指向NULL。   
+4 删除的节点在当中，删除后将前一个节点的next指向后一个节点使其再串联起来。   
+```c
+void DeleteNode(ListNode** head, ListNode* tobedel)  
+{  
+	if (!head || !tobedel||!(*head))   
+		throw exception("point is empty");  
+	
+	if (*head == tobedel)  
+	{    
+		if (!tobedel->next)	//头节点与待删除节点相等且后续没有节点了  
+		{   
+			delete tobedel;  
+			*head = NULL;    
+		}   
+		else  //头节点与待删除节点相等且后续还有节点    
+		{   
+			ListNode* newhead = tobedel->next;  
+			*head = newhead;  
+			delete tobedel;   
+		}   	
+		tobedel= NULL;   
+	}    
+	else   //头节点不与待删除节点相等  
+	{   
+		while (*head)  
+		{   
+			if ((*head)->next == tobedel)   
+			{    
+				(*head)->next = tobedel->next;   
+				delete tobedel;   
+				tobedel = NULL;  
+				break;     
+			}   
+			*head = (*head)->next;    
+		}   
+	}  
+}   
+```   
+以上删除方式的效率是O(n)。  
+还有一个删除效率为O(1)的骚操作。   
+大致思路是这样的：不要用遍历，直接将待删除节点的下个节点的内容拷贝给待删除节点，然后删除下个节点，这样就能达成O(1)的效率了。   
+需要注意的是，如果头节点等于待删除节点以及头节点等于待删除节点并且只有一个节点，按之前的方法操作也是O(1)。   
+另外如果待删除节点在最后则只能通过遍历来操作。   
+尽管如此，平均效率仍然是O(1)。   
+```c
+void DeleteNode(ListNode** head, ListNode* tobedel)  
+{   
+	if (!head || !tobedel||!(*head))  
+		throw exception("empty point");   
+
+	if (*head == tobedel)  
+	{   
+		if (!tobedel->next)	//头节点与待删除节点相等且后续没有节点了  
+			*head = NULL;   
+		else    //头节点与待删除节点相等且后续还有节点   
+			*head = tobedel->next;  
+
+		delete tobedel;  
+		tobedel = NULL;  
+	}   
+	else if(!tobedel->next)	//如果是最后一个节点就没法用骚操作，要用正常的方式  
+	{   
+		while (!(*head))  
+		{  
+			if ((*head)->next == tobedel)  
+			{  
+				(*head)->next = NULL;   
+				delete tobedel;  
+				tobedel = NULL;  
+				return;  
+			}  
+			*head = (*head)->next;   
+		}  
+		throw exception("tobedel point is not in the ListNode");  
+	}   
+	else  //节点在最后，这个骚操作只要O(1)的效率   
+	{  
+		ListNode* realtobedel = tobedel->next;  
+		tobedel->val = realtobedel->val;  
+		tobedel->next = realtobedel->next;   
+		delete realtobedel;  
+		realtobedel = NULL;   
+	}   
+}   
+```   
+这个方法有一个地方需要额外注意的是，如果待删除节点不是这个链表里的节点，它就并不能发现。而如果要验证是否是链表里的节点，则需要进行遍历来进行对比，那么效率仍然是O(n)的。   
+所以这个追求效率的方法，必须在输入的时候保证该节点是链表内的节点才行。   
 ### 总结 
 链表看上去复杂，实际上是对指针的操作，通过指针指向指针来建立的连续（sequence）的容器。   
 增删查以及更多的功能基本上都可以通过从头到尾指针的顺序遍历来完成的，对此不再赘述。只是需要额外在意的是，无论增加还是减少都要通过next指针将前后连接起来，以及最后的next指针始终是NULL。       
