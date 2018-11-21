@@ -226,6 +226,40 @@ void DeleteNode(ListNode** head, ListNode* tobedel)
 ```   
 这个方法有一个地方需要额外注意的是，如果待删除节点不是这个链表里的节点，它就并不能发现。而如果要验证是否是链表里的节点，则需要进行遍历来进行对比，那么效率仍然是O(n)的。   
 所以这个追求效率的方法，必须在输入的时候保证该节点是链表内的节点才行。   
+### 输出倒数第k个节点
+通常情况下，遍历两次，第一次获取节点数量，第二次取总的节点数量-k+1即可。   
+但是这种方式效率不高。  
+效率高的方式可以通过双指针来操作。   
+首席按两个指针指向第一个节点，第一个指针不动，第二个指针先走k个节点，那么第一个和第二个节点始终相距k。然后两个节点一起动直到第二个节点到底，这时候第一个节点就是倒数第k个节点了。   
+```c
+ListNode* FindKthToTail(ListNode* pListHead, unsigned int k)  
+{   
+	if (!k || !pListHead)  
+		throw exception("parameter error");  
+
+	ListNode* first, *second;   
+	first = second = pListHead;   
+
+	for (int i = 0; i < k - 1; i++)  
+	{   
+		if (second->next)  
+			second = second->next;   
+		else   
+			throw exception("size of listnode is less than k");    
+	}   
+  
+	if(!second)    
+		throw exception("size of listnode is less than k");   
+
+	while (second->next)   
+	{  
+		second = second->next;  
+		first = first->next;  
+	}  
+  
+	return first;   
+}  
+```
 ### 总结 
 链表看上去复杂，实际上是对指针的操作，通过指针指向指针来建立的连续（sequence）的容器。   
 增删查以及更多的功能基本上都可以通过从头到尾指针的顺序遍历来完成的，对此不再赘述。只是需要额外在意的是，无论增加还是减少都要通过next指针将前后连接起来，以及最后的next指针始终是NULL。       
