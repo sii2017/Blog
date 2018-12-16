@@ -49,6 +49,33 @@ int print(char* c)
 decltype(print) a;   //类型为int   
 decltype(print)* b;	//类型为函数指针 int (*b)(char*)   
 ```   
+### 后置返回类型   
+一般情况下函数的返回值都在函数的头部，但是在某些情况下，函数的返回值需要在函数的末尾，auto和decltype可以达到这个目的。   
+当我们使用函数模板，有时候会遇到一种情况：   
+```c
+template<typename T1, typename T2>   
+?type? add(T1 a, T2 b)  
+{   
+	return a+b;   
+}    
+```   
+比如以上函数，由于a和b未必是同一种类型，那么我们无法确定返回值。   
+我们是否可以用  
+```c 
+decltype(a+b)   
+```   
+作为返回值呢？   
+答案是不行，由于处在a和b声明之前，这时候还没有a和b。   
+这时候，后置返回类型的应用场景就出现了，那么我们在a和b声明之后确定返回值就行了。   
+```c
+template<typename T1, typename T2>   
+auto add(T1 a, T2 b)-> decltype(a+b)    
+{   
+	return a+b;   
+}    
+```   
+将原来返回值的地方以auto作为占位符，然后在参数之后以->类型，来作为后置返回类型。  
+当然这个操作方法不止用于模板，一般的函数也可以这么使用。   
 ### decltype和auto的区别
 auto和decltype都是类型推断的两种方式，但之间又有区别。主要体现在这几个方面：    
 1 auto是通过编译器计算变量的初始值来推断类型的，decltype同样也是通过编译器来分析表达式进而得到它的类型，但是它不用将表达式的值计算出来。    
