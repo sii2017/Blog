@@ -86,4 +86,49 @@ ios_base::trunc 如果文件存在则截短文件，即删除以前的内容
 ios_base::binary 二进制方式打开  
 其中ate和app的区别在于，app只允许将数据添加到文件尾，而ate模式将指针放在文件尾。   
 #### 二进制使用
+二进制可以方便的将复杂的结构体写入文档。   
+```c
+struct stru  
+{  
+	char a[10];  
+	char b;   
+	double c;  
+	string d;  
+	...   
+}     
 
+stru ss;   
+//如果以文本格式保存，会比较麻烦   
+ofstream fout("xxx.txt", ios_base::out| ios_base::app);    
+fout << ss.a << ss.b << ss.c << .......     
+
+//如果以二进制来保存整块数据  
+ofstream fout("xxx.txt", ios_base::out| ios_base::app| ios_base::binary);     
+fout.write((char*)&ss, sizeof ss);     
+```   
+### 指针在文件中的位置
+fstream类继承了2个方法：seekg和seekp，前者将输入指针移动到指定的文件位置，后者将输出指针移动到指定的文件位置。    
+实际上由于fstream类使用缓冲区来存储中间数据，因此指针指向的是缓冲区中的位置，而不是实际的文件。   
+也可以将seekg用域ifstream对象，将seekp用域ofstream对象，下面是seekg的原型：   
+```c
+basic_istream<charT, traits>& seekg(off_type, ios_base::seekdir);   
+basic_istream<charT, traits>& seekg(pos_type);   
+```  
+实际使用为下面的方式：  
+```c
+fin.seekg(30, ios_base::beg);   //离开始位置30个字节   
+fin.seekg(-1, ios_base::cur);   //离当前位置前一个字节  
+fin.seekg(0, ios_base::end);   //离最后位置0个字节即最后位置本身  
+fin.seekg(112);	//离第1个位置112个字节，即第113个字节    
+```  
+如果要检查文件指针的当前位置，对于输入流可以使用tellg方法，对于输出流可以使用tellp方法。   
+### 生成临时文件名的方法
+如果我们需要创建临时文件的话，函数tempnam可以生成不同的文件名。  
+```c
+char name[] = { '\0' };  
+for (int i = 0; i < 5; i++)  
+{   
+	tmpnam(name);  
+	cout << name << " ";   
+}    
+```  
