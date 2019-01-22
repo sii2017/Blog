@@ -1,7 +1,7 @@
 # 智能指针
 c++中使用动态内存需要程序员手动的通过new来申请，通过delete来释放内存。在某些情况下，程序员会忘记或者不够及时的通过delete来释放动态内存，从而引起内存的浪费以及泄露。   
 为了解决c++内存泄漏的问题，c++11引入了智能指针（Smart Point)。  
-智能指针分为三种类型，shared\_ptr、unique\_ptr和weak\_ptr。以下为shared_ptr的使用介绍。    
+智能指针分为三种类型，shared\_ptr、unique\_ptr和weak\_ptr。以下为unique\_ptr的使用介绍。    
 ## unique\_ptr  
 一个unique_ptr拥有/独占/绑定它所指向的对象。与shared_ptr不同，任何时刻只能有一个unique_ptr指向一个给定对象。   
 当unique_ptr被销毁时，它所指向的对象也被销毁。   
