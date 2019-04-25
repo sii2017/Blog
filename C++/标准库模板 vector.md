@@ -166,6 +166,7 @@ vec.size();	//返回元素的个数。
 vec.front();	//返回vec中第一个元素。   
 vec.back();		//返回vec中最后一个元素。     
 vec.capacity();  //返回vec在内存中总共可以容纳的元素个数（如果预分配了空间）   
+vec.max_size();	//返回vec在当前系统环境中可能能容纳的最大的数量。   
 vecA.swap(vecB);	//将vecA和vecB的数据进行整体性的交换。   
 v[n];	//支持下标，可以像数组一样访问每个位置上的数字，但不会检查是否越界。    
 vec.at(n);    //at方法访问，与下标相同，区别就是at会检查是否越界，是则抛出out of range异常。   
