@@ -5,7 +5,8 @@ const int a= 10;  	//顶层const
 ```  
 ### 关于指针
 而对于指针，由于指针本身是一个对象，它又可以指向另外一个对象。因此指针本身是不是常量以及指针所指的是不是一个常量就是两个相互独立的问题。   
-用**顶层const(top-level const)**表示指针本身是个常量，而用**底层const(low-level const)**表示指针所指对象是一个常量。   
+用**顶层const(top-level const)**表示指针本身是个常量。     
+用**底层const(low-level const)**表示指针所指对象是一个常量。   
 ```c
 const int* b= &a;	//对于指针，const在前，是底层const，代表指向的对象是const的。   
 int* const c;	//对于指针，const在后，是顶层const，代表指针本身是const的。   
