@@ -72,6 +72,29 @@ str.back();	//返回最后一个字符串
 str1.replace(str2);	//交换两个string  
 str.c_str();	//返回一个c字符串   
 str.data();	//返回一个不带结尾符的数组   
-
-char buff[20];   
-str.copy(buff, 
+str1.swap(str2);	//交换string   
+### 遍历及迭代器   
+迭代器是一种检查容器内元素并遍历元素的数据类型。C++更趋向于使用迭代器而不是下标操作，因为标准库为每一种标准容器定义了一种迭代器类型。   
+**获取迭代器的函数**   
+```c
+string s;
+string::iterator itrBegin = s.begin();  //获取第一个元素的迭代器   
+string::iterator itrEnd = s.end();   //获取最后一个元素再后一个的迭代器   
+string::const_iterator itrCBegin = s.cbegin();  //获取begin的const属性的迭代器   
+string::const_iterator itrCEnd = s.cend();   //获取end的const属性的迭代器   
+string::reverse_iterator itrRBegin = s.rbegin();	//获取反向begin迭代器   
+string::reverse_iterator itrREnd = s.rend();	//获取反向end迭代器    
+string::const_reverse_iterator itrCRBegin = s.crbegin(); //获取带有常属性且反向的begin迭代器    
+string::const_reverse_iterator itrCREnd = s.crend();	//获取带有常属性且反向的end迭代器   
+```  
+**使用迭代器进行遍历**  
+```c   
+string str = "12345";   
+for (string::iterator itr = str.begin(); itr != str.end(); itr++)   
+{  
+	cout << *itr;   
+}   
+```   
+注意，作为string的迭代器，指向的是字符char，而不是字符串。   
+### 总结
+string有点像以char为模板类型的vector。   
