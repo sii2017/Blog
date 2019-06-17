@@ -5,7 +5,7 @@ ostream是ofstream类的基类，istream是ofstream类的基类，因此可以�
 ```c
 #include <fstream>   
 ```  
-对于大多数实现来说，博阿寒fstream便自动包含了iostream文件。      
+对于大多数实现来说，包含fstream便自动包含了iostream文件。      
 ### 输出流
 1 通过创建ofstream对象来管理输出流。  
 2 将该对象与特定的文件关联起来。   
