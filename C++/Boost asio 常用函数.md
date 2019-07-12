@@ -134,8 +134,9 @@ int main()
 ```    
 前面的那个使用两个计时器的例子被重写为使用两个 I/O 服务。 这个应用程序仍然基于两个线程；但是现在每个线程被绑定至不同的 I/O 服务。 此外，两个 I/O 对象 timer1 和 timer2 现在也被绑定至不同的 I/O 服务。   
 这个应用程序的功能与前一个相同。 在一定条件下使用多个 I/O 服务是有好处的，每个 I/O 服务有自己的线程，最好是运行在各自的处理器内核上，这样每一个异步操作连同它们的句柄就可以局部化执行。 如果没有远端的数据或函数需要访问，那么每一个 I/O 服务就象一个小的自主应用。 这里的局部和远端是指象高速缓存、内存页这样的资源。 由于在确定优化策略之前需要对底层硬件、操作系统、编译器以及潜在的瓶颈有专门的了解，所以应该仅在清楚这些好处的情况下使用多个 I/O 服务。   
-### 网络编程 
-Boost.Asio 提供了多个 I/O 对象以开发网络应用。 以下例子使用了 boost::asio::ip::tcp::socket 类来建立与中另一台PC的连接，并下载 'Highscore' 主页；就象一个浏览器在指向 www.highscore.de 时所要做的。   
+### 网络编程 客户端
+Boost.Asio 提供了多个 I/O 对象以开发网络应用。   
+以下例子使用了 boost::asio::ip::tcp::socket 类来建立与中另一台PC的连接，并下载 'Highscore' 主页；就象一个浏览器在指向 www.highscore.de 时所要做的。   
 ```c
 #include <boost/asio.hpp>   
 #include <boost/array.hpp>   
@@ -217,3 +218,42 @@ void read_handler(const boost::system::error_code &ec, std::size_t bytes_transfe
 }  
 ```   
 read\_handler()在将数据写出至std::cout之后，会再次调用 async\_read\_some()方法。这是必需的，因为无法保证仅在一次异步操作中就可以接收到整个网页。async\_read\_some()和read\_handler()的交替调用只有当连接被破坏时才中止，如当web服务器已经传送完整个网页时。这种情况下，在read\_handler()内部将报告一个错误，以防止进一步将数据输出至标准输出流，以及进一步对该socket调用async\_read()方法。这时该例程将停止，因为没有更多的异步操作了。   
+### 服务器端
+下面的例子则示范了一个简单的 web 服务器。 其主要差别在于，这个应用不会连接至其它PC，而是等待连接。  
+```c
+#include <boost/asio.hpp>   
+#include <string>     
+
+boost::asio::io\_service io_service;   
+boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), 80);    
+boost::asio::ip::tcp::acceptor acceptor(io\_service, endpoint);    
+boost::asio::ip::tcp::socket sock(io\_service);   
+std::string data = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, world!";   
+
+void write\_handler(const boost::system::error\_code &ec, std::size\_t bytes\_transferred)   
+{  
+}  
+
+void accept_handler(const boost::system::error\_code &ec)   
+{  
+	if (!ec)   
+	{    
+		boost::asio::async\_write(sock, boost::asio::buffer(data), write\_handler);   
+	}   
+}   
+
+int main()   
+{   
+	acceptor.listen();   
+	acceptor.async\_accept(sock, accept_handler);   
+	io_service.run();   
+}    
+```   
+### acceptor对象
+类型为boost::asio::ip::tcp::acceptor的I/O对象acceptor-被初始化为指定的协议和端口号，用于等待从其它PC传入的连接。 初始化工作是通过 endpoint 对象完成的，该对象的类型为 boost::asio::ip::tcp::endpoint，将本例子中的接收器配置为使用端口80来等待 IP v4 的传入连接，这是 WWW 通常所使用的端口和协议。   
+接收器初始化完成后，main() 首先调用 listen() 方法将接收器置于接收状态，然后再用 async\_accept() 方法等待初始连接。 用于发送和接收数据的 socket 被作为第一个参数传递。   
+当一个PC试图建立一个连接时，accept\_handler() 被自动调用。 如果该连接请求成功，就执行自由函数 boost::asio::async\_write() 来通过 socket 发送保存在 data 中的信息。  
+> boost::asio::ip::tcp::socket 还有一个名为 async\_write\_some() 的方法也可以发送数据；不过它会在发送了至少一个字节之后调用相关联的句柄。 该句柄需要计算还剩余多少字节，并反复调用 async\_write\_some() 直至所有字节发送完毕。  
+   
+而使用  boost::asio::async\_write() 可以避免这些，因为这个异步操作仅在缓冲区的所有字节都被发送后才结束。  
+在这个例子中，当所有数据发送完毕，空函数 write\_handler() 将被调用。 由于所有异步操作都已完成，所以应用程序终止。 与其它PC的连接也被相应关闭。
