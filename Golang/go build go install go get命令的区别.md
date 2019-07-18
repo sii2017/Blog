@@ -5,6 +5,7 @@ go install
 go get   
 记录下来相关的内容以供参考。   
 ### go build   
+**仅得到exe执行文件。**   
 通过go build加上要编译的go源文件名，既可以在当前文件夹得到一个可执行文件，默认情况下该文件名为源文件名去掉go后缀，变成了exe。    
 go build hello.go   
 也可以通过-o选项来指定其它的名字    
@@ -14,7 +15,7 @@ go build -o mygo hello.go
 go build   
 如果目录名字为hello，那么可执行文件就是hello.exe。   
 ### go install  
-与build命令相比，install命令在编译源码后啊hi会将可执行文件或库文件安装到约定的目录下（bin）。   
+与build命令相比，install命令在编译源码后会将可执行文件或库文件安装到约定的目录下（bin）。   
 go install不支持重命名-o，直接以其所在目录名命名   
 go install将可执行文件安装到与src同级别的bin目录下，bin目录由go install自动创建。   
 go install将可执行文件依赖的各种package编译后，以静态文件（.a）的方式放在与src同级别的pkg目录下   
