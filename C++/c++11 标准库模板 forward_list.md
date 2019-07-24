@@ -1,5 +1,5 @@
 ## 标准库模板 forward_list 单向链表
-c++11之前，我们使用单向链表，一边自己造轮子使用ListNode类型。从c++11开始，我们可以使用标准库的单向链表std::forward\_list了。   
+c++11之前，我们使用单向链表的话，需要自己造轮子使用ListNode类型。从c++11开始，我们可以使用标准库的单向链表std::forward\_list了。   
 单向链表forward\_list其实就是对C语言风格的单链表的封装，仅提供有限的接口。  
 相对于std::list(双向链表，并且定义很多接口)来说它节省了内存；相对于自己实现的C风格的单链表(hand-written c-style linked list)而言，forward_list也有与其不相上下的效率表现。   
 ### 头文件支持   
