@@ -1,4 +1,4 @@
-## 标准模板库 priority_queue 优先队列
+## 标准库模板 priority_queue 优先队列
 priority_queue是queue的变种，它与queue的不同在于**priority_queue具有排序的功能，默认从大到小排序，即顶端元素最大，尾端元素最小。**    
 因此，priority中存放的元素类型，需要支持小于号，如果是自定义类型则需要进行小于号重载。   
 如果需要调整排序的逻辑，则需要在第三个参数加入compare函数。  
