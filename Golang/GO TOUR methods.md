@@ -107,3 +107,46 @@ fmt.Println(p.Abs()) // OK
 > 这就和c的引用相似，提高效率。但是需要注意的是，要避免不小心改变原始值，如果在不需要改变的时候。   
    
 ### 接口
+接口类型是由一组方法签名定义的集合。   
+或者可以说，   
+接口是一组仅包含方法名、参数、返回值的未具体实现的方法的集合。   
+接口类型的变量可以保存任何实现了这些方法的（接口）值。   
+```
+package main  
+
+import "fmt"   
+
+//声明一个接口，其中包含一个方法call   
+type Phone interface {   
+    call()  
+}   
+
+//任意类型都可以实现接口，比如这个类型   
+type NokiaPhone struct {   
+}   
+
+//任意类型都可以实现接口，只要这个类型的方法与接口类型的方法一致，即称为该类型实现了该接口   
+func (nokiaPhone NokiaPhone) call() {   
+    fmt.Println("I am Nokia, I can call you!")   
+}  
+
+//任意类型都可以实现接口   
+type ApplePhone struct {   
+}   
+
+//同上，只要这个类型的方法与接口类型的方法一直，即称该类型实现了该接口  
+func (iPhone ApplePhone) call() {  
+    fmt.Println("I am Apple Phone, I can call you!")   
+}   
+
+func main() {   
+    var phone Phone  //声明一个接口变量  
+	//将实现了该接口的类型变量赋值给该接口   
+    phone = new(NokiaPhone)   
+	//该接口即可调用该类型的方法  
+    phone.call()   
+
+    phone = new(ApplePhone)  
+    phone.call()   
+}  
+```     
