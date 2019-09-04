@@ -8,13 +8,13 @@ asio，意为异步输入/输出。
 I/O服务抽象了操作系统的接口，允许第一时间进行异步数据处理，而 I/O 对象则用于初始化特定的操作。   
 Boost.Asio只提供了一个名为boost::asio::io\_service的类作为I/O服务，它针对所支持的每一个操作系统都分别实现了优化的类。   
 ```c
-boost::asio::io\_service io\_service;    //初始化  
+boost::asio::io_service io_service;    //初始化  
 ```
 另外库中还包含了针对不同 I/O 对象的几个类。其中，类boost::asio::ip::tcp::socket用于通过网络发送和接收数据，而类boost::asio::deadline\_timer则提供了一个计时器，用于测量某个固定时间点到来或是一段指定的时长过去了。   
 ### boost::asio::deadline\_timer类  
 ```c    
-\#include <boost/asio.hpp>   
-\#include <iostream>     
+#include <boost/asio.hpp>   
+#include <iostream>     
  
 void handler(const boost::system::error_code &ec)    
 {    
@@ -24,9 +24,9 @@ void handler(const boost::system::error_code &ec)
 int main()   
 {    
    boost::asio::io_service io_service;    
-   boost::asio::deadline\_timer timer(io\_service, boost::posix_time::seconds(5));   //用io\_service初始化timer，同时定一个5秒的闹钟   
-   timer.async\_wait(handler);   //被定义后立刻开始计时   
-   io\_service.run();   
+   boost::asio::deadline_timer timer(io_service, boost::posix_time::seconds(5));   //用io_service初始化timer，同时定一个5秒的闹钟   
+   timer.async_wait(handler);   //被定义后立刻开始计时   
+   io_service.run();   
 }    
 ```  
 函数 main()首先定义了一个I/O服务io_service，用于初始化I/O对象timer。   
@@ -34,7 +34,7 @@ int main()
 由于timer的作用类似于一个闹钟，所以boost::asio::deadline_timer的构造函数可以传入第二个参数，用于表示在某个时间点或是在某段时长之后闹钟停止。    
 该计时器在被定义后立刻开始计时，即async\_wait函数。   
 ```c
-timer.async\_wait(handler);   //被定义后立刻开始计时   
+timer.async_wait(handler);   //被定义后立刻开始计时   
 ```   
 值得注意的是，这里我们只是传入了函数名，而该函数此刻并没有被调用，直到计时结束。   
 async\_wait()的好处是，该函数调用会立即返回，而不是等待五秒钟。一旦闹钟时间到，作为参数所提供的函数就会被相应调用。因此，应用程序可以在调用了async\_wait()之后执行其它操作，而不是阻塞在这里。   
@@ -45,7 +45,7 @@ async\_wait()的好处是，该函数调用会立即返回，而不是等待五�
 io_service.run();   
 ```  
 这是必须的，因为控制权必须被操作系统接管，才能在五秒之后调用 handler() 函数。  
-尽管async\_wait()会启动一个异步操作并立即返回，而run()则是阻塞的。因此调用run()后程序执行会停止。具有讽刺意味的是，许多操作系统只是通过阻塞函数来支持异步操作，但是这个限制通常不会成为问题。   
+尽管async\_wait()会启动一个异步操作并立即返回，而run()则是阻塞的。因此调用run()后程序执行会停止。    
 另外在上面的代码中，如果不用run将函数阻塞的话，就会自然的执行到main的最后从而返回，整个程序就结束了，定时器也会失效。   
 因此，上述的程序“应该”被阻塞。   
 那么有没有不该被阻塞的程序呢？   
@@ -224,28 +224,28 @@ read\_handler()在将数据写出至std::cout之后，会再次调用 async\_rea
 #include <boost/asio.hpp>   
 #include <string>     
 
-boost::asio::io\_service io_service;   
+boost::asio::io_service io_service;   
 boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), 80);    
-boost::asio::ip::tcp::acceptor acceptor(io\_service, endpoint);    
-boost::asio::ip::tcp::socket sock(io\_service);   
+boost::asio::ip::tcp::acceptor acceptor(io_service, endpoint);    
+boost::asio::ip::tcp::socket sock(io_service);   
 std::string data = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, world!";   
 
-void write\_handler(const boost::system::error\_code &ec, std::size\_t bytes\_transferred)   
+void write_handler(const boost::system::error_code &ec, std::size_t bytes_transferred)   
 {  
 }  
 
-void accept_handler(const boost::system::error\_code &ec)   
+void accept_handler(const boost::system::error_code &ec)   
 {  
 	if (!ec)   
 	{    
-		boost::asio::async\_write(sock, boost::asio::buffer(data), write\_handler);   
+		boost::asio::async_write(sock, boost::asio::buffer(data), write_handler);   
 	}   
 }   
 
 int main()   
 {   
 	acceptor.listen();   
-	acceptor.async\_accept(sock, accept_handler);   
+	acceptor.async_accept(sock, accept_handler);   
 	io_service.run();   
 }    
 ```   
