@@ -26,8 +26,8 @@ cout << arrSecurity[0] << arrSecurity[1] << arrSecurity[2] << endl;
 结束的时候，释放内存的顺序，先释放一级指针，再释放二级指针。   
 ```c
 for (int i = 0; i < 3; i++)   
-	delete arrSecurity[i];   
-delete arrSecurity;  
+	delete []arrSecurity[i];   
+delete []arrSecurity;  
 ```   
 ### 最后的吐槽
 我觉得传二级指针，不如传逗号隔开的字符串了。  
