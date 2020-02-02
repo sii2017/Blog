@@ -24,3 +24,6 @@ JSON的构成: **ws 值 ws**
 [3, 1, 4, 1, 5, 9, 2, 6]    
 字符串与C或者Java的字符串非常相似。字符串是由双引号包围的任意数量Unicode字符的集合，使用反斜线转义。一个字符（character）即一个单独的字符串（character string）。     
 数字也与C或者Java的数值非常相似。除去未曾使用的八进制与十六进制格式。除去一些编码细节。     
+### json库
+目前使用腾讯的这个库   
+https://github.com/sii2017/rapidjson
