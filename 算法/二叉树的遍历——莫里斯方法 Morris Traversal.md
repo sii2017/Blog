@@ -98,3 +98,51 @@ void Morris(TreeNode* root)
 	}
 }
 ```
+### 后序遍历
+后序遍历的顺序是，左右根。  
+理论上来说，莫里斯遍历不支持后序遍历。至少在微调的情况下，是不支持的。   
+但是通过标准库容器，我们可以就**答案**上实现后序遍历，**实时**输出还是不支持的。    
+思路如下，在上面的前序遍历中，我们可知，莫里斯遍历支持，在实时情况下以根-左-右的顺序输出节点。    
+我们可以通过微调代码，将左右对调，获得以根-右-左的顺序输出（保存）节点。   
+由于后序遍历的顺序是左-右-根，所以，与上面的根-右-左完全相反，我们只要把答案反转，就可以得到后序遍历的输出。   
+#### 代码  
+```c
+vector<int> postorderTraversal(TreeNode* root)
+{
+	vector<int> ret;
+
+	TreeNode* cur = root;
+
+	while (cur)
+	{
+		if (!cur->right)	//如果右子树为空，则直接进到左子树继续遍历
+		{
+			ret.push_back(cur->val);
+			cur = cur->left;
+		}
+		else  //如果右子树不为空
+		{
+			TreeNode* node = cur->right;
+			while (node->left && node->left != cur)	//找到该子树下最左节点
+			{
+				if (node->left && node->left != cur)
+					node = node->left;
+			}
+			if (!node->left)	//如果该最左节点为空说明尚未被遍历过，连接上当前节点cur，方便之后传送
+			{
+				ret.push_back(cur->val);
+				node->left = cur;
+				cur = cur->right;
+			}
+			else if (node->left == cur)	//如果该节点和当前节点相同，说明刚从那里传送回来，将起变回null，然后跑路左节点继续便利
+			{
+				node->left = NULL;
+				cur = cur->left;
+			}
+		}
+	}
+
+	reverse(ret.begin(), ret.end());
+	return ret;
+}
+```
