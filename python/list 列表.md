@@ -104,3 +104,9 @@ list4 = sorted(list1, key=len)
 list1.sort(reverse=True)  
 print(list1)  
 ```  
+### 颠倒顺序
+上面的是根据值来排序，还有一个颠倒顺序的操作也是日常用的比较多的，通过reverse成员函数。   
+```Python
+list1.reverse()   
+```  
+这样就能在原有基础上直接颠倒顺序了。  
