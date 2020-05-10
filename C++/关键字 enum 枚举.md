@@ -85,31 +85,4 @@ static const int two=1;
 static const int three=2;   
 ```  
 使用的话可以把他们赋值给int类型。   
-### 强类型枚举   
-强类型枚举（Stringly-typed enums），也称为枚举类型，是c++11推出的新语法。   
-传统c++中枚举有一个缺陷是，枚举量暴露在外层作用域中，如果同一作用域里，两个不同的枚举类型有着相同的枚举常量，那他们是不能使用的。   
-```c
-enum side{right, left};   
-enum thing{wrong, right};   
-```   
-这里，由于他们都有right这个枚举常量会导致命名冲突，编译阶段会报错。   
-另一个缺陷是，旧枚举的枚举量默认为整型，无法自定义枚举的底层数据类型。   
-强类型枚举解决了这2个问题。   
-我们只需要给普通枚举加上class或者struct就可以将其变成强类型枚举。   
-```c
-enum class type1{one, two, three};   
-enum struct type2{one, two, three};   
-```  
-如此声明，也不会有问题，因为他们是强类型枚举。   
-```c
-type1 t1= one;	//error   
-type1 t1= type1::one;	//赋值要带上作用域。  
-```   
-此外我们还可以指定枚举常量的底层数据类型。   
-```c
-enum class A: char{ one='a', two='b', three};   
-A a= A::one;   
-cout << sizeof(a) << endl;	//大小为1   
-char b= a; 	//error，尽管底层数据为char，但是无法被用于赋值   
-```   
-可以看到尽管可以指定底层数据类型，但是无法被用于赋值。   
+> c++11已经推出了强类型枚举，用以代替原来的枚举，以修复一些存在的问题。建议在支持c++11的环境中尽量使用强类型枚举。强类型枚举可以参考同目录下《c++11 强类型枚举》。
