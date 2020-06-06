@@ -96,3 +96,9 @@ gdb attach 10000
 set print element 0  
 ```  
 再使用print则可以完整显示内容了。   
+#### print显示字节的时候，显示很多repeats
+当print以字节形式显示内容时，默认当有重复的字节，会以repeats数量来显示，如果我们希望看到完整的，那么可以这么做。   
+```
+set print repeats 100   
+```  
+100意味着100以下次数的repeats会正常显示，100以上则会以repeats显示。这个数字可以根据需要自己调整。   
