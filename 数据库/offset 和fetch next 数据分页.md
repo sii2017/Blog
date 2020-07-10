@@ -11,4 +11,7 @@ offset的值，代表移动到多少行以后。
 fetch next的值，代表取多少行的数据。   
 最后rows only不要忘记。   
 这个语法比之前的ROW_NUMBER()要简单的多。  
-> 值得注意的是，offset和fetch next的值也支持表达式的形式。  
+> offset和fetch next的值也支持表达式的形式。  
+### 注意
+offset fetch next语句必须在order by语句后使用，分页需要有排序支持。   
+如果order by不能完全排序（即有些值相同导致排序的位置可能随机），那么分页可能产生**随机的重复性**。   
