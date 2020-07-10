@@ -37,3 +37,8 @@ select prod_id, prod_price, prod_name from Products
 order by prod_price DESC, prod_name DESC  
 ``` 
 > 升序其实也有关键字ASC，但是并没有什么用处，因为order by子句默认就是升序的。   
+### 注意
+由于数据库底层的设计，如果order by的关键字有重复的现象，需要警觉。  
+一些由于关键字重复而没有被排序的数据，并不会总是以数据库中默认的顺序，返回到我们这里。而是数据库先读取到谁，则显示谁。   
+因此，如果order by的关键字有重复的现象，那些没有被排序的数据，**将会以随机的顺序出现**。有时候会造成无法估计的问题。   
+比如，如果order by的关键字有重复的现象，再使用offset fetch next语法来分页，**则分页很有可能会有重复的数据**。   
